@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Coin Traduction Pédagogique 🚀</title>
+    <title>Mon Coin Traduction 🚀</title>
     <style>
         body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #00ff00; padding: 20px; }
         .container { max-width: 650px; margin: 0 auto; background: #252526; padding: 25px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,255,0,0.2); border: 1px solid #333; }
@@ -11,16 +11,15 @@
         textarea, select, button { width: 100%; padding: 12px; margin-bottom: 15px; background: #1e1e1e; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; box-sizing: border-box; font-size: 15px; }
         button { font-weight: bold; cursor: pointer; background: #00ff00; color: #1e1e1e; transition: all 0.2s; }
         button:hover { background: #12c012; box-shadow: 0 0 10px #00ff00; }
-        .result-box { background: #1e1e1e; padding: 15px; border-left: 4px solid #00ff00; margin-top: 15px; display: none; line-height: 1.6; white-space: pre-line; color: #fff; }
-        .loader { display: none; text-align: center; font-style: italic; color: #888; margin-bottom: 15px; }
+        .result-box { background: #1e1e1e; padding: 15px; border-left: 4px solid #00ff00; margin-top: 15px; display: none; line-height: 1.6; font-size: 18px; color: #fff; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>[ ENGINE v16 ] Traducteur Propulsé par Google</h1>
+    <h1>[ v17 ] Google Traduction Privé</h1>
     
-    <textarea id="textInput" placeholder="Tape absolument la phrase que tu veux..."></textarea>
+    <textarea id="textInput" placeholder="Tape absolument tout ce que tu veux traduire ici..."></textarea>
 
     <select id="langSelect">
         <option value="de">Allemand 🇩🇪</option>
@@ -28,54 +27,43 @@
         <option value="es">Espagnol 🇪🇸</option>
     </select>
 
-    <button onclick="traduireAvecGoogle()">LANCER LA TRADUCTION GOOGLE</button>
+    <button onclick="lancerTraductionGoogle()">TRADUIRE AVEC GOOGLE</button>
 
-    <div id="loader" class="loader">🔄 Connexion aux serveurs Google Traduction...</div>
     <div id="result" class="result-box"></div>
 </div>
 
 <script>
-    async function traduireAvecGoogle() {
+    async function lancerTraductionGoogle() {
         const texte = document.getElementById('textInput').value.trim();
         const langCible = document.getElementById('langSelect').value;
         const resultBox = document.getElementById('result');
-        const loader = document.getElementById('loader');
 
-        if (!texte) { alert("Tape un texte, l'ami !"); return; }
-
-        loader.style.display = "block";
-        resultBox.style.display = "none";
+        if (!texte) { alert("Entre ton texte !"); return; }
 
         try {
-            // Script de requete officiel et direct sur l'outil de traduction Google gratuit
-            const url = `https://googleapis.com{langCible}&dt=t&q=${encodeURIComponent(texte)}`;
+            // Lien d'appel officiel direct au moteur Google Traduction
+            const url = "https://googleapis.com" + langCible + "&dt=t&q=" + encodeURIComponent(texte);
             
             const response = await fetch(url);
             const data = await response.json();
             
-            // Recupération de la traduction brute renvoyée par Google
-            let traductionBrute = data[0][0][0];
-
-            // --- NOTRE INTELLIGENCE PÉDAGOGIQUE COMPLÉMENTAIRE ---
-            // Le script va analyser la traduction Google pour ajouter les conseils du prof
-            let notesPedagogiques = "";
-            let mots = texte.toLowerCase().split(/\s+/);
-
-            if (langCible === "de") {
-                notesPedagogiques += `\n\n🎓 **CONSEILS DE GRAMMAIRE ALLEMAND :**`;
-                notesPedagogiques += `\n• Vérifie bien que les **noms communs** (comme les objets ou la nourriture) ont reçu leur **Majuscule obligatoire** dans le résultat final !`;
-                notesPedagogiques += `\n• N'oublie pas qu'en allemand, le verbe conjugué se place toujours en **2e position** de ta phrase.`;
+            // Extraction propre du texte traduit par Google
+            let texteTraduit = "";
+            if (data && data[0]) {
+                data[0].forEach((morceau) => {
+                    if (morceau[0]) {
+                        texteTraduit += morceau[0];
+                    }
+                });
             }
 
-            loader.style.display = "none";
+            // Affichage direct du bloc vert avec la traduction brute de Google
             resultBox.innerHTML = `<strong>🏆 TRADUCTION GOOGLE :</strong>\n` +
-                                  `<span style="font-size: 18px; color: #1e1e1e; background: #00ff00; padding: 6px 12px; display: inline-block; margin: 10px 0; border-radius: 4px; font-weight: bold;">${traductionBrute}</span>` + 
-                                  notesPedagogiques;
+                                  `<span style="font-size: 20px; color: #1e1e1e; background: #00ff00; padding: 6px 12px; display: inline-block; margin: 10px 0; border-radius: 4px; font-weight: bold;">${texteTraduit}</span>`;
             resultBox.style.display = "block";
 
         } catch (error) {
-            loader.style.display = "none";
-            alert("Erreur avec l'outil Google Traduction.");
+            alert("Erreur de communication avec Google Traduction.");
             console.error(error);
         }
     }
