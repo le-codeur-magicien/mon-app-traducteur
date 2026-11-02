@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Traducteur Google Officiel 🚀</title>
+    <title>Mon Coin Traduction Officiel 🚀</title>
     <style>
         body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #00ff00; padding: 20px; text-align: center; }
         .container { max-width: 650px; margin: 0 auto; background: #252526; padding: 25px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,255,0,0.2); border: 1px solid #333; }
         h1 { color: #00ff00; font-size: 18px; margin-bottom: 20px; text-transform: uppercase; }
-        p { color: #fff; font-size: 14px; margin-bottom: 25px; }
-        /* Style pour rendre le bouton de Google plus visible dans notre thème */
-        #google_translate_element { background: #1e1e1e; padding: 15px; border: 1px solid #00ff00; border-radius: 4px; display: inline-block; }
+        textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #1e1e1e; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; box-sizing: border-box; font-size: 15px; height: 120px; resize: none; }
+        #google_translate_element { background: #1e1e1e; padding: 10px; border: 1px solid #00ff00; border-radius: 4px; display: inline-block; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>[ v18 ] Intégration Google Traduction</h1>
-    <p>Écris ton texte directement sur la page, puis utilise le bouton Google ci-dessous pour choisir l'Allemand, l'Anglais ou la langue de ton choix ! Tout le site se traduira d'un coup.</p>
+    <h1>[ v19 ] Google Traduction Intégral</h1>
     
-    <!-- L'emplacement où le bouton officiel Google va apparaître -->
+    <!-- Zone d'écriture réparée -->
+    <textarea id="textInput" placeholder="Écris ou colle ton texte à traduire ici..."></textarea>
+    
+    <!-- Bouton sélecteur officiel de Google -->
     <div id="google_translate_element"></div>
 </div>
 
-<!-- Scripts officiels de Google Traduction (Impossible à bloquer) -->
+<!-- Scripts officiels de Google Traduction -->
 <script type="text/javascript">
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({pageLanguage: 'fr', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
 }
 </script>
-<script type="text/javascript" src="//://google.com"></script>
+<script type="text/javascript" src="https://google.com"></script>
 
 </body>
 </html>
