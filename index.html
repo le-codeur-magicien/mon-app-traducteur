@@ -21,11 +21,10 @@
 <div class="container">
     <h1>[ DevMode: ON ] Traducteur Pédagogique</h1>
     
-    <textarea id="textInput" placeholder="Tape un mot ou une phrase (ex: chat, manger, je parle allemand...)"></textarea>
+    <textarea id="textInput" placeholder="Tape un mot ou un nombre (ex: chat, manger, école, 21...)"></textarea>
 
     <select id="langSelect">
         <option value="de">Allemand 🇩🇪</option>
-        <option value="en">Anglais 🇬🇧</option>
     </select>
 
     <button onclick="analyserTexte()">LANCER L'ANALYSE DU CODE</button>
@@ -34,13 +33,48 @@
 </div>
 
 <script>
-    // Notre base de données pédagogique secrète
+    // GIGA DICTIONNAIRE PÉDAGOGIQUE
     const dictionnaire = {
-        "chat": { de: "Katze (die)", en: "cat", note: "En allemand, tous les noms prennent une majuscule ! C'est féminin : 'die Katze'." },
-        "chien": { de: "Hund (der)", en: "dog", note: "En allemand, n'oublie pas la majuscule. C'est masculin : 'der Hund'." },
-        "manger": { de: "essen", en: "to eat", note: "Allemand : verbe irrégulier (ich esse, du isst). Anglais : base verbale." },
-        "bonjour": { de: "Guten Tag", en: "Hello", note: "En allemand, 'Guten' prend un -n à la fin car c'est de l'accusatif masculin masculin (complément de temps)." },
-        "je parle allemand": { de: "Ich spreche Deutsch.", en: "I speak German.", note: "Règle d'or : En allemand, le verbe conjugué ('spreche') est toujours en 2e position dans la phrase !" }
+        // --- ANIMAUX ---
+        "chat": { de: "Katze (die)", note: "Majuscule obligatoire ! Féminin : 'die Katze'. Pluriel : 'die Katzen'." },
+        "chien": { de: "Hund (der)", note: "Masculin : 'der Hund'. Attention au 'd' final qui se prononce presque comme un 't'." },
+        "cheval": { de: "Pferd (das)", note: "Neutre : 'das Pferd'. On prononce bien le 'Pf' en soufflant dès le début !" },
+        "oiseau": { de: "Vogel (der)", note: "Le 'V' se prononce comme un 'F' -> 'Foguel'." },
+
+        // --- ÉCOLE / DEVOIRS ---
+        "école": { de: "Schule (die)", note: "Féminin : 'die Schule'. Le groupe 'Sch' se prononce 'Ch' comme en français." },
+        "professeur": { de: "Lehrer (der)", note: "Le 'h' est muet, il sert juste à rallonger le 'e' précédant -> 'Lééé-rer'." },
+        "livre": { de: "Buch (das)", note: "Neutre : 'das Buch'. Le 'ch' se prononce au fond de la gorge (comme un r de jota)." },
+        "crayon": { de: "Bleistift (der)", note: "Masculin : 'der Bleistift'. Mot composé de Blei (plomb) et Stift (stylo)." },
+        "cahier": { de: "Heft (das)", note: "Neutre : 'das Heft'. Le 'H' initial doit être expiré (soufflé)." },
+        "devoirs": { de: "Hausaufgaben (die - pluriel)", note: "Toujours au pluriel. Littéralement : 'les tâches de la maison'." },
+
+        // --- VERBES DE BASE ---
+        "manger": { de: "essen", note: "Verbe irrégulier. Au présent : ich esse, du isst, er isst, wir essen..." },
+        "boire": { de: "trinken", note: "Verbe régulier. Parfait pour s'entraîner : ich trinke, du trinkst, er trinkt." },
+        "parler": { de: "sprechen", note: "Verbe fort (irrégulier). Le 'e' devient 'i' avec du et er -> 'du sprichst'." },
+        "faire": { de: "machen", note: "Verbe très utilisé. 'Ich mache meine Hausaufgaben' = Je fais mes devoirs." },
+        "aller": { de: "gehen", note: "Le 'h' est muet. Signifie marcher ou aller à un endroit." },
+        "aimer": { de: "lieben", note: "Le 'ie' se prononce comme un 'i' très long -> 'liii-ben'." },
+
+        // --- MOTS DE TOUS LES JOURS ---
+        "bonjour": { de: "Guten Tag", note: "Formule standard. Littéralement 'Bon jour'. 'Guten' prend un -n à l'accusatif." },
+        "merci": { de: "Danke", note: "Court et efficace. On prononce bien le 'e' à la fin ('Danké'), pas muet !" },
+        "s'il vous plaît": { de: "Bitte", note: "Sert aussi pour dire 'De rien' quand on vous dit d'avance merci." },
+        "oui": { de: "Ja", note: "Le 'J' se prononce comme un 'Y' -> 'Ya'." },
+        "non": { de: "Nein", note: "Le groupe 'ei' se prononce toujours 'aï' -> 'Naïn'." },
+        "maison": { de: "Haus (das)", note: "Neutre : 'das Haus'. À l'origine du mot 'House' en anglais." },
+
+        // --- LES NOMBRES (PIÈGES ET LOGIQUE) ---
+        "1": { de: "eins", note: "Le nombre de base. Perd son 's' quand il est dans un nombre composé (ex: 21)." },
+        "2": { de: "zwei", note: "Le 'z' se prononce toujours 'ts' -> 'tsvaï'." },
+        "3": { de: "drei", note: "Le 'r' est légèrement gratté au fond de la gorge -> 'draï'." },
+        "4": { de: "vier", note: "Le 'v' fait le son 'f' -> 'fir'." },
+        "11": { de: "elf", note: "Irrégulier, à apprendre par cœur !" },
+        "12": { de: "zwölf", note: "Le 'ö' se prononce comme un 'eu' français -> 'tsvœlf'." },
+        "20": { de: "zwanzig", note: "Toutes les dizaines se finissent en -zig (sauf 30 qui fait dreißig)." },
+        "21": { de: "einundzwanzig", note: "LOGIQUE INVERSÉE ! On dit d'abord l'unité (ein), puis 'und' (et), puis la dizaine (zwanzig)." },
+        "30": { de: "dreißig", note: "Attention, c'est la seule dizaine avec un 'ß' (Eszett) au lieu d'un 'z'." }
     };
 
     function analyserTexte() {
@@ -48,23 +82,28 @@
         const lang = document.getElementById('langSelect').value;
         const resultBox = document.getElementById('result');
         
-        if (!texte) { alert("Entre du texte à analyser, l'ami !"); return; }
+        if (!texte) { alert("Entre un mot ou un nombre, l'ami !"); return; }
 
         let trouve = dictionnaire[texte];
-        
         resultBox.style.display = "block";
         
         if (trouve) {
             resultBox.innerHTML = `<strong>🤖 ANALYSE RÉUSSIE :</strong>\n\n` +
                                   `• <span class="accent">Traduction :</span> <strong>${trouve[lang]}</strong>\n\n` +
-                                  `• <span class="orange">Explication pédagogique :</span>\n${trouve.note}`;
+                                  `• <span class="orange">Note Pédagogique :</span>\n${trouve.note}`;
         } else {
-            // Si le mot exact n'est pas dans la démo, le script génère une structure type de geek
-            let tradDemo = lang === 'de' ? '... (Mot en cours de dev)' : '... (Word pending)';
-            resultBox.innerHTML = `<strong>⚠️ MOT NON RÉPERTORIÉ DANS LA BDD</strong>\n\n` +
-                                  `Tu viens de taper : "${texte}"\n\n` +
-                                  `• <span class="accent">Logique Allemande :</span> N'oublie pas qu'à partir de 21, on inverse ! Exemple : 21 se dit "un et vingt" (einundzwanzig).\n` +
-                                  `• <span class="orange">Astuce :</span> Ajoute ce mot dans le code JavaScript de ton fichier pour enrichir ton dictionnaire privé !`;
+            // Si c'est un nombre composé pas listé, on donne la règle magique
+            if(!isNaN(texte) && parseInt(texte) > 20 && parseInt(texte) < 100) {
+                resultBox.innerHTML = `<strong>🔢 LOGIQUE DES NOMBRES COMPOSÉS :</strong>\n\n` +
+                                      `Tu as tapé le nombre : ${texte}.\n\n` +
+                                      `• <span class="orange">La règle d'or :</span> En allemand, on inverse toujours à partir de 21 ! ` +
+                                      `Tu dois écrire : [L'unité] + und + [La dizaine].\n` +
+                                      `Exemple pour 25 : fünf (5) + und (et) + zwanzig (20) = <em>fünfundzwanzig</em>.`;
+            } else {
+                resultBox.innerHTML = `<strong>⚠️ BASE DE DONNÉES DOUBLE-CHÉQUÉE</strong>\n\n` +
+                                      `Le mot "${texte}" n'est pas encore dans le dictionnaire.\n\n` +
+                                      `• <span class="accent">Astuce de geek :</span> Tu peux ouvrir ton fichier avec le Bloc-notes et ajouter une ligne dans la liste pour enrichir ton appli !`;
+            }
         }
     }
 </script>
