@@ -3,107 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Traducteur Privé 🚀</title>
+    <title>Mon Coin Traduction Pédagogique 🚀</title>
     <style>
         body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #00ff00; padding: 20px; }
         .container { max-width: 600px; margin: 0 auto; background: #252526; padding: 25px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,255,0,0.2); border: 1px solid #333; }
-        h1 { text-align: center; color: #00ff00; font-size: 22px; margin-bottom: 20px; text-transform: uppercase; }
+        h1 { text-align: center; color: #00ff00; font-size: 20px; margin-bottom: 20px; text-transform: uppercase; }
         textarea, select, button { width: 100%; padding: 12px; margin-bottom: 15px; background: #1e1e1e; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; box-sizing: border-box; font-size: 15px; }
         button { font-weight: bold; cursor: pointer; background: #00ff00; color: #1e1e1e; transition: all 0.2s; }
         button:hover { background: #12c012; box-shadow: 0 0 10px #00ff00; }
         .result-box { background: #1e1e1e; padding: 15px; border-left: 4px solid #00ff00; margin-top: 15px; display: none; line-height: 1.6; white-space: pre-line; }
-        .accent { color: #569cd6; }
-        .orange { color: #ce9178; }
+        .loader { display: none; text-align: center; font-style: italic; color: #888; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>[ DevMode: ON ] Traducteur Pédagogique</h1>
+    <h1>[ IA Connectée ] Traducteur Pédagogique v2</h1>
     
-    <textarea id="textInput" placeholder="Tape un mot ou un nombre (ex: chat, manger, école, 21...)"></textarea>
+    <textarea id="textInput" placeholder="Tape N'IMPORTE QUELLE phrase (ex: Je mange une banane)"></textarea>
 
     <select id="langSelect">
-        <option value="de">Allemand 🇩🇪</option>
+        <option value="Allemand">Allemand 🇩🇪</option>
+        <option value="Anglais">Anglais 🇬🇧</option>
+        <option value="Espagnol">Espagnol 🇪🇸</option>
     </select>
 
-    <button onclick="analyserTexte()">LANCER L'ANALYSE DU CODE</button>
+    <button onclick="appelerIA()">LANCER L'ANALYSE PAR L'IA</button>
 
+    <div id="loader" class="loader">🤖 L'IA analyse les structures grammaticales... patiente...</div>
     <div id="result" class="result-box"></div>
 </div>
 
 <script>
-    // GIGA DICTIONNAIRE PÉDAGOGIQUE
-    const dictionnaire = {
-        // --- ANIMAUX ---
-        "chat": { de: "Katze (die)", note: "Majuscule obligatoire ! Féminin : 'die Katze'. Pluriel : 'die Katzen'." },
-        "chien": { de: "Hund (der)", note: "Masculin : 'der Hund'. Attention au 'd' final qui se prononce presque comme un 't'." },
-        "cheval": { de: "Pferd (das)", note: "Neutre : 'das Pferd'. On prononce bien le 'Pf' en soufflant dès le début !" },
-        "oiseau": { de: "Vogel (der)", note: "Le 'V' se prononce comme un 'F' -> 'Foguel'." },
-
-        // --- ÉCOLE / DEVOIRS ---
-        "école": { de: "Schule (die)", note: "Féminin : 'die Schule'. Le groupe 'Sch' se prononce 'Ch' comme en français." },
-        "professeur": { de: "Lehrer (der)", note: "Le 'h' est muet, il sert juste à rallonger le 'e' précédant -> 'Lééé-rer'." },
-        "livre": { de: "Buch (das)", note: "Neutre : 'das Buch'. Le 'ch' se prononce au fond de la gorge (comme un r de jota)." },
-        "crayon": { de: "Bleistift (der)", note: "Masculin : 'der Bleistift'. Mot composé de Blei (plomb) et Stift (stylo)." },
-        "cahier": { de: "Heft (das)", note: "Neutre : 'das Heft'. Le 'H' initial doit être expiré (soufflé)." },
-        "devoirs": { de: "Hausaufgaben (die - pluriel)", note: "Toujours au pluriel. Littéralement : 'les tâches de la maison'." },
-
-        // --- VERBES DE BASE ---
-        "manger": { de: "essen", note: "Verbe irrégulier. Au présent : ich esse, du isst, er isst, wir essen..." },
-        "boire": { de: "trinken", note: "Verbe régulier. Parfait pour s'entraîner : ich trinke, du trinkst, er trinkt." },
-        "parler": { de: "sprechen", note: "Verbe fort (irrégulier). Le 'e' devient 'i' avec du et er -> 'du sprichst'." },
-        "faire": { de: "machen", note: "Verbe très utilisé. 'Ich mache meine Hausaufgaben' = Je fais mes devoirs." },
-        "aller": { de: "gehen", note: "Le 'h' est muet. Signifie marcher ou aller à un endroit." },
-        "aimer": { de: "lieben", note: "Le 'ie' se prononce comme un 'i' très long -> 'liii-ben'." },
-
-        // --- MOTS DE TOUS LES JOURS ---
-        "bonjour": { de: "Guten Tag", note: "Formule standard. Littéralement 'Bon jour'. 'Guten' prend un -n à l'accusatif." },
-        "merci": { de: "Danke", note: "Court et efficace. On prononce bien le 'e' à la fin ('Danké'), pas muet !" },
-        "s'il vous plaît": { de: "Bitte", note: "Sert aussi pour dire 'De rien' quand on vous dit d'avance merci." },
-        "oui": { de: "Ja", note: "Le 'J' se prononce comme un 'Y' -> 'Ya'." },
-        "non": { de: "Nein", note: "Le groupe 'ei' se prononce toujours 'aï' -> 'Naïn'." },
-        "maison": { de: "Haus (das)", note: "Neutre : 'das Haus'. À l'origine du mot 'House' en anglais." },
-
-        // --- LES NOMBRES (PIÈGES ET LOGIQUE) ---
-        "1": { de: "eins", note: "Le nombre de base. Perd son 's' quand il est dans un nombre composé (ex: 21)." },
-        "2": { de: "zwei", note: "Le 'z' se prononce toujours 'ts' -> 'tsvaï'." },
-        "3": { de: "drei", note: "Le 'r' est légèrement gratté au fond de la gorge -> 'draï'." },
-        "4": { de: "vier", note: "Le 'v' fait le son 'f' -> 'fir'." },
-        "11": { de: "elf", note: "Irrégulier, à apprendre par cœur !" },
-        "12": { de: "zwölf", note: "Le 'ö' se prononce comme un 'eu' français -> 'tsvœlf'." },
-        "20": { de: "zwanzig", note: "Toutes les dizaines se finissent en -zig (sauf 30 qui fait dreißig)." },
-        "21": { de: "einundzwanzig", note: "LOGIQUE INVERSÉE ! On dit d'abord l'unité (ein), puis 'und' (et), puis la dizaine (zwanzig)." },
-        "30": { de: "dreißig", note: "Attention, c'est la seule dizaine avec un 'ß' (Eszett) au lieu d'un 'z'." }
-    };
-
-    function analyserTexte() {
-        const texte = document.getElementById('textInput').value.toLowerCase().trim();
+    async function appelerIA() {
+        const texte = document.getElementById('textInput').value.trim();
         const lang = document.getElementById('langSelect').value;
         const resultBox = document.getElementById('result');
-        
-        if (!texte) { alert("Entre un mot ou un nombre, l'ami !"); return; }
+        const loader = document.getElementById('loader');
 
-        let trouve = dictionnaire[texte];
-        resultBox.style.display = "block";
-        
-        if (trouve) {
-            resultBox.innerHTML = `<strong>🤖 ANALYSE RÉUSSIE :</strong>\n\n` +
-                                  `• <span class="accent">Traduction :</span> <strong>${trouve[lang]}</strong>\n\n` +
-                                  `• <span class="orange">Note Pédagogique :</span>\n${trouve.note}`;
-        } else {
-            // Si c'est un nombre composé pas listé, on donne la règle magique
-            if(!isNaN(texte) && parseInt(texte) > 20 && parseInt(texte) < 100) {
-                resultBox.innerHTML = `<strong>🔢 LOGIQUE DES NOMBRES COMPOSÉS :</strong>\n\n` +
-                                      `Tu as tapé le nombre : ${texte}.\n\n` +
-                                      `• <span class="orange">La règle d'or :</span> En allemand, on inverse toujours à partir de 21 ! ` +
-                                      `Tu dois écrire : [L'unité] + und + [La dizaine].\n` +
-                                      `Exemple pour 25 : fünf (5) + und (et) + zwanzig (20) = <em>fünfundzwanzig</em>.`;
-            } else {
-                resultBox.innerHTML = `<strong>⚠️ BASE DE DONNÉES DOUBLE-CHÉQUÉE</strong>\n\n` +
-                                      `Le mot "${texte}" n'est pas encore dans le dictionnaire.\n\n` +
-                                      `• <span class="accent">Astuce de geek :</span> Tu peux ouvrir ton fichier avec le Bloc-notes et ajouter une ligne dans la liste pour enrichir ton appli !`;
-            }
+        if (!texte) { alert("Entre une phrase à analyser !"); return; }
+
+        loader.style.display = "block";
+        resultBox.style.display = "none";
+
+        const prompt = `Agis comme un prof de langue. Traduis en ${lang} la phrase : "${texte}". 
+        Donne la réponse en français sous cette forme précise :
+        1. LA TRADUCTION FINALE (en gras)
+        2. EXPLICATION DU VOCABULAIRE ET DE LA GRAMMAIRE (Explique pourquoi on conjugue comme ça, s'il y a un piège, une terminaison spéciale ou un ordre des mots inversé). Rends cela super simple et fun.`;
+
+        try {
+            // Utilisation d'un proxy open-source pour interroger l'IA de DuckDuckGo sans clé API
+            const response = await fetch('https://aryahcr.cc', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages: [{ role: "user", content: prompt }],
+                    model: "Llama-3.1-70B-Instruct", // Un modèle d'IA surpuissant et libre d'accès
+                    stream: false
+                })
+            });
+
+            const data = await response.json();
+            let aiReply = data.gpt || data.message || "Désolé, l'IA a eu un bug sur cette phrase.";
+            
+            // Formatage rapide du gras markdown en HTML
+            aiReply = aiReply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            loader.style.display = "none";
+            resultBox.innerHTML = aiReply;
+            resultBox.style.display = "block";
+
+        } catch (error) {
+            loader.style.display = "none";
+            alert("Erreur de connexion avec le serveur de l'IA. Réessaie !");
+            console.error(error);
         }
     }
 </script>
