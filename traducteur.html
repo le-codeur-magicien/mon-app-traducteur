@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Traducteur Privé 🚀</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #00ff00; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #252526; padding: 25px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,255,0,0.2); border: 1px solid #333; }
+        h1 { text-align: center; color: #00ff00; font-size: 22px; margin-bottom: 20px; text-transform: uppercase; }
+        textarea, select, button { width: 100%; padding: 12px; margin-bottom: 15px; background: #1e1e1e; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; box-sizing: border-box; font-size: 15px; }
+        button { font-weight: bold; cursor: pointer; background: #00ff00; color: #1e1e1e; transition: all 0.2s; }
+        button:hover { background: #12c012; box-shadow: 0 0 10px #00ff00; }
+        .result-box { background: #1e1e1e; padding: 15px; border-left: 4px solid #00ff00; margin-top: 15px; display: none; line-height: 1.6; white-space: pre-line; }
+        .accent { color: #569cd6; }
+        .orange { color: #ce9178; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>[ DevMode: ON ] Traducteur Pédagogique</h1>
+    
+    <textarea id="textInput" placeholder="Tape un mot ou une phrase (ex: chat, manger, je parle allemand...)"></textarea>
+
+    <select id="langSelect">
+        <option value="de">Allemand 🇩🇪</option>
+        <option value="en">Anglais 🇬🇧</option>
+    </select>
+
+    <button onclick="analyserTexte()">LANCER L'ANALYSE DU CODE</button>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+    // Notre base de données pédagogique secrète
+    const dictionnaire = {
+        "chat": { de: "Katze (die)", en: "cat", note: "En allemand, tous les noms prennent une majuscule ! C'est féminin : 'die Katze'." },
+        "chien": { de: "Hund (der)", en: "dog", note: "En allemand, n'oublie pas la majuscule. C'est masculin : 'der Hund'." },
+        "manger": { de: "essen", en: "to eat", note: "Allemand : verbe irrégulier (ich esse, du isst). Anglais : base verbale." },
+        "bonjour": { de: "Guten Tag", en: "Hello", note: "En allemand, 'Guten' prend un -n à la fin car c'est de l'accusatif masculin masculin (complément de temps)." },
+        "je parle allemand": { de: "Ich spreche Deutsch.", en: "I speak German.", note: "Règle d'or : En allemand, le verbe conjugué ('spreche') est toujours en 2e position dans la phrase !" }
+    };
+
+    function analyserTexte() {
+        const texte = document.getElementById('textInput').value.toLowerCase().trim();
+        const lang = document.getElementById('langSelect').value;
+        const resultBox = document.getElementById('result');
+        
+        if (!texte) { alert("Entre du texte à analyser, l'ami !"); return; }
+
+        let trouve = dictionnaire[texte];
+        
+        resultBox.style.display = "block";
+        
+        if (trouve) {
+            resultBox.innerHTML = `<strong>🤖 ANALYSE RÉUSSIE :</strong>\n\n` +
+                                  `• <span class="accent">Traduction :</span> <strong>${trouve[lang]}</strong>\n\n` +
+                                  `• <span class="orange">Explication pédagogique :</span>\n${trouve.note}`;
+        } else {
+            // Si le mot exact n'est pas dans la démo, le script génère une structure type de geek
+            let tradDemo = lang === 'de' ? '... (Mot en cours de dev)' : '... (Word pending)';
+            resultBox.innerHTML = `<strong>⚠️ MOT NON RÉPERTORIÉ DANS LA BDD</strong>\n\n` +
+                                  `Tu viens de taper : "${texte}"\n\n` +
+                                  `• <span class="accent">Logique Allemande :</span> N'oublie pas qu'à partir de 21, on inverse ! Exemple : 21 se dit "un et vingt" (einundzwanzig).\n` +
+                                  `• <span class="orange">Astuce :</span> Ajoute ce mot dans le code JavaScript de ton fichier pour enrichir ton dictionnaire privé !`;
+        }
+    }
+</script>
+
+</body>
+</html>
