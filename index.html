@@ -7,30 +7,35 @@
     <style>
         body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #00ff00; padding: 20px; text-align: center; }
         .container { max-width: 650px; margin: 0 auto; background: #252526; padding: 25px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,255,0,0.2); border: 1px solid #333; }
-        h1 { color: #00ff00; font-size: 18px; margin-bottom: 20px; text-transform: uppercase; }
+        h1 { color: #00ff00; font-size: 16px; margin-bottom: 20px; text-transform: uppercase; }
         textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #1e1e1e; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; box-sizing: border-box; font-size: 15px; height: 120px; resize: none; }
-        #google_translate_element { background: #1e1e1e; padding: 10px; border: 1px solid #00ff00; border-radius: 4px; display: inline-block; margin-top: 10px; }
+        button { width: 100%; font-weight: bold; cursor: pointer; background: #00ff00; color: #1e1e1e; padding: 15px; border: none; border-radius: 4px; font-size: 16px; text-transform: uppercase; transition: all 0.2s; }
+        button:hover { background: #12c012; box-shadow: 0 0 10px #00ff00; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>[ v19 ] Google Traduction Intégral</h1>
+    <h1>[ v20 ] Google Traduction Instantane</h1>
     
-    <!-- Zone d'écriture réparée -->
     <textarea id="textInput" placeholder="Écris ou colle ton texte à traduire ici..."></textarea>
     
-    <!-- Bouton sélecteur officiel de Google -->
-    <div id="google_translate_element"></div>
+    <!-- Notre vrai bouton de hacker -->
+    <button onclick="ouvrirGoogleTraduction()">Traduire en Allemand 🇩🇪</button>
 </div>
 
-<!-- Scripts officiels de Google Traduction -->
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage: 'fr', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+<script>
+function ouvrirGoogleTraduction() {
+    const texte = document.getElementById('textInput').value.trim();
+    if (!texte) { alert("Écris d'abord une phrase !"); return; }
+    
+    // Crée le lien direct officiel vers Google Traduction en Allemand (de)
+    const lienGoogle = `https://google.com{encodeURIComponent(texte)}&op=translate`;
+    
+    // Ouvre la page instantanément dans un nouvel onglet propre
+    window.open(lienGoogle, '_blank');
 }
 </script>
-<script type="text/javascript" src="https://google.com"></script>
 
 </body>
 </html>
