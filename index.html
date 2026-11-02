@@ -3,71 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Coin Traduction 🚀</title>
+    <title>Mon Traducteur Google Officiel 🚀</title>
     <style>
-        body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #00ff00; padding: 20px; }
+        body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #00ff00; padding: 20px; text-align: center; }
         .container { max-width: 650px; margin: 0 auto; background: #252526; padding: 25px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,255,0,0.2); border: 1px solid #333; }
-        h1 { text-align: center; color: #00ff00; font-size: 16px; margin-bottom: 20px; text-transform: uppercase; }
-        textarea, select, button { width: 100%; padding: 12px; margin-bottom: 15px; background: #1e1e1e; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; box-sizing: border-box; font-size: 15px; }
-        button { font-weight: bold; cursor: pointer; background: #00ff00; color: #1e1e1e; transition: all 0.2s; }
-        button:hover { background: #12c012; box-shadow: 0 0 10px #00ff00; }
-        .result-box { background: #1e1e1e; padding: 15px; border-left: 4px solid #00ff00; margin-top: 15px; display: none; line-height: 1.6; font-size: 18px; color: #fff; }
+        h1 { color: #00ff00; font-size: 18px; margin-bottom: 20px; text-transform: uppercase; }
+        p { color: #fff; font-size: 14px; margin-bottom: 25px; }
+        /* Style pour rendre le bouton de Google plus visible dans notre thème */
+        #google_translate_element { background: #1e1e1e; padding: 15px; border: 1px solid #00ff00; border-radius: 4px; display: inline-block; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>[ v17 ] Google Traduction Privé</h1>
+    <h1>[ v18 ] Intégration Google Traduction</h1>
+    <p>Écris ton texte directement sur la page, puis utilise le bouton Google ci-dessous pour choisir l'Allemand, l'Anglais ou la langue de ton choix ! Tout le site se traduira d'un coup.</p>
     
-    <textarea id="textInput" placeholder="Tape absolument tout ce que tu veux traduire ici..."></textarea>
-
-    <select id="langSelect">
-        <option value="de">Allemand 🇩🇪</option>
-        <option value="en">Anglais 🇬🇧</option>
-        <option value="es">Espagnol 🇪🇸</option>
-    </select>
-
-    <button onclick="lancerTraductionGoogle()">TRADUIRE AVEC GOOGLE</button>
-
-    <div id="result" class="result-box"></div>
+    <!-- L'emplacement où le bouton officiel Google va apparaître -->
+    <div id="google_translate_element"></div>
 </div>
 
-<script>
-    async function lancerTraductionGoogle() {
-        const texte = document.getElementById('textInput').value.trim();
-        const langCible = document.getElementById('langSelect').value;
-        const resultBox = document.getElementById('result');
-
-        if (!texte) { alert("Entre ton texte !"); return; }
-
-        try {
-            // Lien d'appel officiel direct au moteur Google Traduction
-            const url = "https://googleapis.com" + langCible + "&dt=t&q=" + encodeURIComponent(texte);
-            
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            // Extraction propre du texte traduit par Google
-            let texteTraduit = "";
-            if (data && data[0]) {
-                data[0].forEach((morceau) => {
-                    if (morceau[0]) {
-                        texteTraduit += morceau[0];
-                    }
-                });
-            }
-
-            // Affichage direct du bloc vert avec la traduction brute de Google
-            resultBox.innerHTML = `<strong>🏆 TRADUCTION GOOGLE :</strong>\n` +
-                                  `<span style="font-size: 20px; color: #1e1e1e; background: #00ff00; padding: 6px 12px; display: inline-block; margin: 10px 0; border-radius: 4px; font-weight: bold;">${texteTraduit}</span>`;
-            resultBox.style.display = "block";
-
-        } catch (error) {
-            alert("Erreur de communication avec Google Traduction.");
-            console.error(error);
-        }
-    }
+<!-- Scripts officiels de Google Traduction (Impossible à bloquer) -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'fr', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
 </script>
+<script type="text/javascript" src="//://google.com"></script>
 
 </body>
 </html>
